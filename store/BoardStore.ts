@@ -5,6 +5,7 @@ import { Board, Column, TypedColumn } from "@/typings";
 interface BoardState {
   board: Board;
   getBoard: () => void;
+  setStateBoard: (board: Board) => void;
 }
 
 export const useBoardStore = create<BoardState>((set) => ({
@@ -15,4 +16,5 @@ export const useBoardStore = create<BoardState>((set) => ({
     const board = await getTodosGroupedByColumn();
     set({ board });
   },
+  setStateBoard: (board: Board) => set({ board }),
 }));
