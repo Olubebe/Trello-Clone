@@ -1,9 +1,9 @@
-import React from "react";
-import { Draggable, Droppable } from "react-beautiful-dnd";
 import { Todo, TypedColumn } from "@/typings";
-import { useBoardStore } from "@/store/BoardStore";
-import { PlusCircleIcon } from "@heroicons/react/16/solid";
+import { PlusCircleIcon } from "@heroicons/react/24/solid";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import TodoCard from "./TodoCard";
+import { useBoardStore } from "@/store/BoardStore";
+import { useModalStore } from "@/store/ModalStore";
 
 type Props = {
   id: TypedColumn;
@@ -11,7 +11,7 @@ type Props = {
   index: number;
 };
 
-const idToColumnText: {
+const idColumnText: {
   [key in TypedColumn]: string;
 } = {
   todo: "To Do",
@@ -19,8 +19,18 @@ const idToColumnText: {
   done: "Done",
 };
 
-const Column = ({ id, todos, index }: Props) => {
-  const [searchString] = useBoardStore((state) => [state.searchString]);
+function Column({ id, todos, index }: Props) {
+  const [searchString, setNewTaskType] = useBoardStore((state) => [
+    state.searchString,
+    state.setNewTaskType,
+  ]);
+  const openModal = useModalStore((state) => state.openModal);
+
+  const handleAddTodo = () => {
+    setNewTaskType(id);
+    openModal();
+  };
+
   return (
     <Draggable draggableId={id} index={index}>
       {(provided) => (
@@ -38,9 +48,9 @@ const Column = ({ id, todos, index }: Props) => {
                   snapshot.isDraggingOver ? "bg-green-200" : "bg-white/50"
                 }`}
               >
-                <h2 className="flex justify-between items-center font-bold text-2xl p-2">
-                  {idToColumnText[id]}
-                  <span className="text-gray-500 bg-gray-200 rounded-full px-2 py-1 text-sm font-normal ">
+                <h2 className="flex justify-between p-2 text-xl font-bold">
+                  {idColumnText[id]}
+                  <span className="px-2 py-1 text-sm font-normal text-gray-500 bg-gray-200 rounded-full">
                     {!searchString
                       ? todos.length
                       : todos.filter((todo) =>
@@ -50,7 +60,8 @@ const Column = ({ id, todos, index }: Props) => {
                         ).length}
                   </span>
                 </h2>
-                <div className="space-x-2">
+
+                <div className="space-y-2 ">
                   {todos.map((todo, index) => {
                     if (
                       searchString &&
@@ -59,6 +70,7 @@ const Column = ({ id, todos, index }: Props) => {
                         .includes(searchString.toLowerCase())
                     )
                       return null;
+
                     return (
                       <Draggable
                         key={todo.$id}
@@ -78,10 +90,15 @@ const Column = ({ id, todos, index }: Props) => {
                       </Draggable>
                     );
                   })}
+
                   {provided.placeholder}
-                  <div className="flex items-end justify-end p-2">
-                    <button className="text-green-500 hover:text-green-600">
-                      <PlusCircleIcon className="h-10 w-10" />
+
+                  <div className="flex items-end justify-end p-2 ">
+                    <button
+                      onClick={handleAddTodo}
+                      className="text-green-500 hover:text-green-600"
+                    >
+                      <PlusCircleIcon className="w-10 h-10" />
                     </button>
                   </div>
                 </div>
@@ -92,6 +109,6 @@ const Column = ({ id, todos, index }: Props) => {
       )}
     </Draggable>
   );
-};
+}
 
 export default Column;

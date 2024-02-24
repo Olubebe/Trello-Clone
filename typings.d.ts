@@ -19,7 +19,7 @@ declare module "@/typings" {
   }
 
   interface Image {
-    id: string;
     fileId: string;
+    bucketId: string;
   }
 }

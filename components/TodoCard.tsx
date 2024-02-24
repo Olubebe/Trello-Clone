@@ -1,6 +1,5 @@
 "use client";
-
-// import getUrl from "@/lib/getUrl";
+import getUrl from "@/lib/getUrl";
 import { useBoardStore } from "@/store/BoardStore";
 import { Todo, TypedColumn } from "@/typings";
 import { XCircleIcon } from "@heroicons/react/24/solid";
@@ -28,24 +27,24 @@ function TodoCard({
   draggableProps,
   dragHandleProps,
 }: Props) {
-  //   const deleteTask = useBoardStore((state) => state.deleteTask);
+  const deleteTask = useBoardStore((state) => state.deleteTask);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-  //   useEffect(() => {
-  //     if (todo.image) {
-  //       const fetchImage = async () => {
-  //         const url = await getUrl(todo.image!);
-  //         if (url) {
-  //           setImageUrl(url.toString());
-  //         }
-  //       };
-  //       fetchImage();
-  //     }
-  //   }, [todo]);
+  useEffect(() => {
+    if (todo.image) {
+      const fetchImage = async () => {
+        const url = await getUrl(todo.image!);
+        if (url) {
+          setImageUrl(url.toString());
+        }
+      };
+      fetchImage();
+    }
+  }, [todo]);
 
   return (
     <div
-      className="space-y-2 bg-white rounded-md drop-shadow-md"
+      className=" space-y-2 bg-white rounded-md drop-shadow-md"
       {...draggableProps}
       {...dragHandleProps}
       ref={innerRef}
@@ -53,7 +52,7 @@ function TodoCard({
       <div className="flex items-center justify-between p-5">
         <p>{todo.title}</p>
         <button
-          //   onClick={() => deleteTask(index, todo, id)}
+          onClick={() => deleteTask(index, todo, id)}
           className="text-red-500 hover:text-red-600"
         >
           <XCircleIcon className="w-8 h-8 ml-5" />

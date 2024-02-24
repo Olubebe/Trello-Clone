@@ -6,11 +6,11 @@ import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { Column as ColumnType } from "@/typings";
 
 const Board = () => {
-  const [board, getBoard, setStateBoard, updateTodoInDB] = useBoardStore(
+  const [board, getBoard, setBoardState, updateTodoInDB] = useBoardStore(
     (store) => [
       store.board,
       store.getBoard,
-      store.setStateBoard,
+      store.setBoardState,
       store.updateTodoInDB,
     ]
   );
@@ -29,7 +29,7 @@ const Board = () => {
       const [removed] = entries.splice(source.index, 1);
       entries.splice(destination.index, 0, removed);
       const rearrangedColumns = new Map(entries);
-      setStateBoard({
+      setBoardState({
         ...board,
         columns: rearrangedColumns,
       });
@@ -62,7 +62,7 @@ const Board = () => {
       };
       const newColumns = new Map(board.columns);
       newColumns.set(startCol.id, newCol);
-      setStateBoard({
+      setBoardState({
         ...board,
         columns: newColumns,
       });
@@ -82,7 +82,7 @@ const Board = () => {
       });
       updateTodoInDB(todoMoved, finishCol.id);
 
-      setStateBoard({
+      setBoardState({
         ...board,
         columns: newColumns,
       });
